@@ -15,20 +15,15 @@ int main(int argc, char *argv[]) {
   unsigned int num;
   sscanf(argv[3], "%u", &num);
   
-  const unsigned int destlen = strlen(argv[2]);
+  unsigned int destlen = strlen(argv[2]);
   char dest[destlen + (int) (log10((float) num)) + 2];
   memcpy(dest, argv[2], destlen);
   
-  char *numdest;
-  if(dest[destlen - 1] == '/')
-  	numdest = &dest[destlen];
-  else {
-  	dest[destlen] = '/';
-  	numdest = &dest[destlen + 1];
-  }
+  if(dest[destlen - 1] != '/')
+  	dest[destlen++] = '/';
   
   for(int i = 0; i < num; i++) {
-  	sprintf(numdest, "%u", i);
+  	sprintf(&dest[destlen], "%u", i);
   	link(source, dest);
   }
 
