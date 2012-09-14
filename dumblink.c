@@ -16,15 +16,30 @@ int main(int argc, char *argv[]) {
   sscanf(argv[3], "%u", &num);
   
   unsigned int destlen = strlen(argv[2]);
-  char dest[destlen + (int) (log10((float) num)) + 2];
+  unsigned int digits = (int) log10((float) num) + 1;
+  char dest[destlen + digits + 2];
+
   memcpy(dest, argv[2], destlen);
-  
   if(dest[destlen - 1] != '/')
   	dest[destlen++] = '/';
-  
+  memset(&dest[destlen], 48, digits);
+  dest[destlen + digits] = '\0';
+ 
   for(int i = 0; i < num; i++) {
-  	sprintf(&dest[destlen], "%u", i);
-  	link(source, dest);
+    // Increment decimal number.
+    int done = 0;
+    char *cur = &dest[destlen + digits];
+    do {
+      --cur;
+      *cur += 1;
+      if(*cur == 58) {
+        *cur = 48;
+      } else {
+        done = 1;
+      }
+    } while(!done);
+      
+    link(source, dest);
   }
 
 	return 0;
